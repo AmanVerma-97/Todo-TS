@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { DndContext, MouseSensor, KeyboardSensor, PointerSensor, TouchSensor, closestCorners, useSensor, useSensors } from "@dnd-kit/core"
+import { DndContext, KeyboardSensor, PointerSensor, TouchSensor, closestCorners, useSensor, useSensors } from "@dnd-kit/core"
 import Task from './Task';
 import Input from './Input';
 
@@ -11,13 +11,15 @@ export interface TodoItem {
 }
 
 const TodoApp:React.FC = () => {
-    const [todos, setTodos] = useState<TodoItem[]>([]);
-    const [total, setTotal] = useState(0);
+    const [todos, setTodos] = useState<TodoItem[]>(  localStorage.getItem('todos') ? JSON.parse(localStorage.getItem('todos')!) : []);
+    //The exclamation mark (!) is a non-null assertion, telling TypeScript we're confident the value exists.
+
 
     const removeTodo = (id: string) => {
         const updatedTodos = todos.filter((todo) => todo.id !== id);
+        localStorage.setItem('todos',JSON.stringify(updatedTodos));
         setTodos(updatedTodos);
-        setTotal(prev=>prev-1);
+
     };
 
     const toggleComplete = (id: string) => {
@@ -27,6 +29,7 @@ const TodoApp:React.FC = () => {
             }
             return todo;
         });
+        localStorage.setItem('todos',JSON.stringify(updatedTodos));
         setTodos(updatedTodos);
     };
 
@@ -57,19 +60,18 @@ const TodoApp:React.FC = () => {
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         }),
-        useSensor(MouseSensor),
     )
 
     return (
-    <div className=' w-10/12 md:w-8/12 lg:w-7/12 flex flex-col gap-4 lg:gap-7 m-auto justify-center items-center p-2 mt-5 pb-4'>
+    <div className=' w-10/12 md:w-8/12 flex flex-col gap-4 lg:gap-7 m-auto justify-center items-center p-2 mt-5'>
         
-        <Input todos={todos} setTodos={setTodos} setTotal={setTotal} total={total}/>
+        <Input todos={todos} setTodos={setTodos}/>
 
     {/* Tasks */}
     <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd} sensors={sensors}>
         <ul className='w-11/12 md:w-8/12 flex flex-col justify-center items-start p-3 gap-4 lg:gap-6 mt-52'>
 
-        {todos.length>0 ? <div className=' flex flex-col justify-center items-center w-full'> <span className=' font-semibold'>Total Tasks : {total}</span> <hr className=' w-full bg-blue-800 border border-blue-800 mb-2' /></div> : ""}
+        {todos.length>0 ? <div className=' flex flex-col justify-center items-center w-full'> <span className=' font-semibold'>Total Tasks : {todos.length}</span> <hr className=' w-full bg-blue-800 border border-blue-800 mb-2' /></div> : ""}
         
         <SortableContext items={todos} strategy={verticalListSortingStrategy}>
         

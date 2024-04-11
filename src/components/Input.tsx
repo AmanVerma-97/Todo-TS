@@ -3,26 +3,28 @@ import { TodoItem } from "./TodoApp";
 
 interface ChildProps{
     setTodos:(todo:TodoItem[])=> void,
-    setTotal:(prev:number)=> void,
-    todos:TodoItem[],
-    total:number,
+    todos:TodoItem[], 
 }
-const Input: React.FC<ChildProps> = ({setTodos, setTotal, todos, total}) => {
+const Input: React.FC<ChildProps> = ({setTodos, todos}) => {
 
   const [newTodo, setNewTodo] = useState(' ');
+
+  const handleAddTodo = (newId: string): void => {
+    const newTodoItem: TodoItem = {
+      id: newId,
+      text: newTodo, 
+      completed: false,
+    };
+    const updatedTodos = [...todos, newTodoItem];
+    setTodos(updatedTodos); 
+  };
 
   const addTodo = () => {
     if (newTodo !== '') {
         const newId = crypto.randomUUID();
-        const newTodoItem: TodoItem = {
-        id: newId,
-        text: newTodo,
-        completed: false,
-        };
-        setTodos([...todos, newTodoItem]);
+        handleAddTodo(newId);
+        localStorage.setItem('todos', JSON.stringify(todos));
         setNewTodo('');
-        total=total+1;
-        setTotal(total);
     }
     else{
     alert("Enter some data")

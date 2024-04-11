@@ -25,17 +25,17 @@ const Task : React.FC<ChildProps> = ({todo, toggleComplete, removeTodo, id}) => 
 
   return (
     <div ref={setNodeRef} {...attributes} {...listeners} style={style} className=" w-full flex justify-between items-center touch-none">
-        <li key={todo[0].id} className='h-auto p-3 border-2 border-teal-700 shadow-md shadow-blue-950/80 w-full flex justify-between items-center rounded-md bg-amber-50'>
+        <li key={todo[0].id} className='h-auto p-2 lg:p-3 border-2 border-teal-700 shadow-md shadow-blue-950/80 w-full flex justify-between items-center rounded-md bg-amber-50'>
         
-            <button onClick={()=>toggleComplete(todo[0].id)} className='mx-2 border-transparent border-2 rounded-full hover:border-black'> <FaCheck/></button>
+            <button onClick={()=>toggleComplete(todo[0].id)} className='mx-2 border-transparent border-2 rounded-full hover:border-green-600'> <FaCheck/></button>
             
-            <p className={`${todo[0].completed?' line-through text-red-700/80':'none'} break-words w-9/12 text-center text-lg `}>
+            <p className={`${todo[0].completed?' line-through text-red-700/80':'none'} break-words w-9/12 text-center text-base lg:text-lg`}>
                 {todo[0].text}
             </p>
             
-            <button onClick={()=>removeTodo(todo[0].id)} className='mx-2 border-transparent border-2 rounded-full hover:border-black'><MdDelete/></button>
+            <button onClick={()=>removeTodo(todo[0].id)} className='mx-2 border-transparent border-2 rounded-full hover:border-red-900/80'><MdDelete/></button>
         </li>
-        <div className=' ml-3'> { !todo[0].completed ? '👍':'✌️' }  </div>
+        <div className='ml-3'> { !todo[0].completed ? '👍':'✌️' }  </div>
     </div>
   )
 }
